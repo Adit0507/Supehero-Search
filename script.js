@@ -22,3 +22,47 @@ const showActiveTabBody = () => {
 const hideAllTabBody = () => allTabsBody.forEach(singleTabBody => singleTabBody.classList.remove('show-tab'));
 const hideAllTabHead = () => allTabsHead.forEach(singleTabHead => singleTabHead.classList.remove('active-tab'))
 
+window.addEventListener('DOMContentLoaded', () => init());
+
+allTabsHead.forEach(singleTabHead => {
+    singleTabHead.addEventListener('click', () => {
+        hideAllTabHead();
+        activeTab = singleTabHead.dataset.id;   
+        showActiveTabHead();
+        showActiveTabBody();
+    });
+});
+
+const getInputValue = (event) => {
+    event.preventDefault();
+    let searchText = searchForm.search.value;
+    fetchAllSuperhero(searchText);
+};
+
+// search form submission
+searchForm.addEventListener('submit', getInputValue);
+
+const fetchAllSuperhero = async(searchText) => {
+    let url = `https://www.superheroapi.com/api.php/104436082344391/search/${searchText}`;
+    try{
+        const response = await response.json();
+        if(allData.response === 'success'){
+            showSearchList(allData.results);
+        }
+    }catch(error){
+        console.log(error)
+    }
+}
+
+const showSearchList = (data) => {
+    searchList.innerHTML = "";
+    data.forEach(dataItem => {
+        const divElem = document.createElement('div');
+        divElem.classList.add('search-list-item');
+        divElem.innerHTML= `
+            <img src="${dataItem.image.url ? dataItem.image.url : ""}" alt="">
+            <p> </p>
+        `;
+
+    })
+}
